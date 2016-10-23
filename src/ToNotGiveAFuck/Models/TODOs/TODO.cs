@@ -9,15 +9,15 @@ namespace ToNotGiveAFuck.Models.TODOs
 {
     public class TODO
     {
-        public int TodoId { get; set; }
+        public Guid TodoId { get; set; }
         [Required()]
         public string Name { get; set; }
         public string Description { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public int Priority { get; set; }
-        public Enumerations.Type Type { get; set; }
-        public Status Status { get; set; }
+        public Types Type { get; set; }
+        public Statuses Status { get; set; }
         public List<StatusChange> StatusHistory { get; set; }
         public DateTime? Deadline { get; set; }
         public DateTime? StartDate { get; set; }
@@ -25,9 +25,7 @@ namespace ToNotGiveAFuck.Models.TODOs
         public DateTime StatusChangeDate { get; set; }
         [Display(AutoGenerateField = false)]
         public string CreatedBy { get; set; }
-        public virtual List<string> Administrators { get; set; }
-        public virtual List<string> Observers { get; set; }
-
-
+        public virtual List<string> Doers { get; set; }
+        public virtual List<string> Followers { get; set; }
     }
 }

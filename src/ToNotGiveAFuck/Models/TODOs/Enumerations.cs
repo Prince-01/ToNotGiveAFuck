@@ -7,12 +7,18 @@ namespace ToNotGiveAFuck.Models.TODOs
 {
     public static class Enumerations
     {
-        public enum Status
+        public enum Priviliges
+        {
+            Follower = 0,
+            Doer = 1,
+
+        }
+        public enum Statuses
         {
             Started = 0,
             Finished = 1,
         }
-        public enum Type
+        public enum Types
         {
             Ordinary,
             Chain

@@ -8,9 +8,9 @@ namespace ToNotGiveAFuck.Models.TODOs
 {
     public class StatusChange
     {
-        public int TodoId { get; set; }
+        public Guid TodoId { get; set; }
         public virtual TODO Todo { get; set; }
         public DateTime ChangeDate { get; set; }
-        public Status Status { get; set; }
+        public Statuses Status { get; set; }
     }
 }
