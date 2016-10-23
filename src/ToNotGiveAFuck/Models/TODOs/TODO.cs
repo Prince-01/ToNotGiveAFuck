@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using ToNotGiveAFuck.Models.Shared;
 using static ToNotGiveAFuck.Models.TODOs.Enumerations;
 
 namespace ToNotGiveAFuck.Models.TODOs
@@ -24,8 +25,6 @@ namespace ToNotGiveAFuck.Models.TODOs
         public bool CanBeStartedBefore { get; set; }
         public DateTime StatusChangeDate { get; set; }
         [Display(AutoGenerateField = false)]
-        public string CreatedBy { get; set; }
-        public virtual List<string> Doers { get; set; }
-        public virtual List<string> Followers { get; set; }
+        public virtual List<Person> Involved { get; set; }
     }
 }

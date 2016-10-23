@@ -9,9 +9,9 @@ namespace ToNotGiveAFuck.Models.TODOs
     {
         public enum Priviliges
         {
-            Follower = 0,
+            Creator = 0,
             Doer = 1,
-
+            Follower = 2,
         }
         public enum Statuses
         {
@@ -20,8 +20,8 @@ namespace ToNotGiveAFuck.Models.TODOs
         }
         public enum Types
         {
-            Ordinary,
-            Chain
+            Ordinary = 0,
+            Chain = 1,
         }
     }
 }
