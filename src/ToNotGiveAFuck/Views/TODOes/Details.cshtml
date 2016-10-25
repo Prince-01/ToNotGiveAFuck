@@ -67,6 +67,15 @@
     </dl>
 </div>
 <div>
+    <h2>TODO status history</h2>
+    <ul>
+        @foreach (var change in Model.StatusHistory)
+        {
+            <li>@change.ChangeDate: @change.Status</li>
+        }
+    </ul>
+</div>
+<div>
     <a asp-action="Edit" asp-route-id="@Model.TodoId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

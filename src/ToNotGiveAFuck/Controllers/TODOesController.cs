@@ -9,6 +9,7 @@ using ToNotGiveAFuck.Models;
 using ToNotGiveAFuck.Models.TODOs;
 using ToNotGiveAFuck.Models.Shared;
 using System.Security.Claims;
+using static ToNotGiveAFuck.Models.TODOs.Enumerations;
 
 namespace ToNotGiveAFuck.Controllers
 {
@@ -37,6 +38,7 @@ namespace ToNotGiveAFuck.Controllers
             }
 
             var tODO = await _context.TODO.SingleOrDefaultAsync(m => m.TodoId == id);
+            tODO.StatusHistory = _context.StatusChange.Where(sc => sc.TodoId == (Guid)id).ToList();
             if (tODO == null)
             {
                 return NotFound();
@@ -62,8 +64,11 @@ namespace ToNotGiveAFuck.Controllers
             if (ModelState.IsValid)
             {
                 tODO.TodoId = Guid.NewGuid();
+                tODO.StatusChangeDate = DateTime.Now;
+                tODO.Status = Statuses.Started;
                 _context.Add(tODO);
                 _context.Add(new PersonClaimsAbout { UserId = Guid.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value), PinnedToId = tODO.TodoId });
+                _context.Add(new StatusChange { Status = tODO.Status, TodoId = tODO.TodoId, ChangeDate = tODO.StatusChangeDate });
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -155,6 +160,19 @@ namespace ToNotGiveAFuck.Controllers
         private bool TODOExists(Guid id)
         {
             return _context.TODO.Any(e => e.TodoId == id);
+        }
+
+        public async Task<IActionResult> ChangeStatus(Guid todoId, Statuses status)
+        {
+            var todo = await _context.TODO.FirstOrDefaultAsync(t => t.TodoId == todoId);
+            todo.Status = status;
+            todo.StatusChangeDate = DateTime.Now;
+
+            _context.Entry(todo).State = EntityState.Modified;
+            _context.Add(new StatusChange { TodoId = todo.TodoId, Status = todo.Status, ChangeDate = todo.StatusChangeDate });
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = todoId });
         }
     }
 }

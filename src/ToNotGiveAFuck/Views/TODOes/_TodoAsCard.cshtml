@@ -1,3 +1,4 @@
+@using static ToNotGiveAFuck.Models.TODOs.Enumerations
 @model ToNotGiveAFuck.Models.TODOs.TODO
 
 @{
@@ -10,11 +11,35 @@
     var color = "#" + red + green + blue;
 }
 
+
 <div id="todo-@Model.TodoId" class="col-md-3" style="background-color:@color;">
     <p>
-        <div class="col-md-8"><b><a asp-controller="TODOes" asp-action="Details" asp-route-id="@Model.TodoId">@Model.Name</a></b></div>
+        <div class="col-md-8 dropdown">
+            <b><a href="#" data-toggle="dropdown" class="dropdown-toggle">@Model.Name</a></b>
+            <ul class="dropdown-menu" id="menu1">
+                <li>
+                    <a href="#">Zmie? status<i class="icon-arrow-right"></i></a>
+                    <ul class="dropdown-menu sub-menu">
+                        <li><a asp-controller="TODOes" asp-action="ChangeStatus" asp-route-todoId="@Model.TodoId" asp-route-status="@Statuses.Started">Rozpocz?te</a></li>
+                        <li><a asp-controller="TODOes" asp-action="ChangeStatus" asp-route-todoId="@Model.TodoId" asp-route-status="@Statuses.Finished">Zako?czone</a></li>
+                        @*<li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li class="nav-header">Nav header</li>
+            <li><a href="#">Separated link</a></li>
+            <li><a href="#">One more separated link</a></li>*@
+                    </ul>
+                </li>
+                <li><a asp-controller="TODOes" asp-action="Details" asp-route-id="@Model.TodoId">Manage</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+            </ul>
+        </div>
         <div class="col-md-4"><i>@Model.Priority / 10</i></div>
+
     </p>
+
+
     <p>
         <div class="col-md-6">@Model.Status</div>
     </p>
