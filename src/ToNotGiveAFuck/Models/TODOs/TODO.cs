@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using ToNotGiveAFuck.Models.Shared;
@@ -10,6 +11,7 @@ namespace ToNotGiveAFuck.Models.TODOs
 {
     public class TODO
     {
+        [Key]
         public Guid TodoId { get; set; }
         [Required()]
         public string Name { get; set; }
@@ -24,7 +26,7 @@ namespace ToNotGiveAFuck.Models.TODOs
         public DateTime? StartDate { get; set; }
         public bool CanBeStartedBefore { get; set; }
         public DateTime StatusChangeDate { get; set; }
-        [Display(AutoGenerateField = false)]
-        public virtual List<Person> Involved { get; set; }
+        public virtual List<PersonClaimsAbout> Involved { get; set; }
+        public virtual List<Comment> Comments { get; set; }
     }
 }

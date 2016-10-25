@@ -10,6 +10,7 @@ namespace ToNotGiveAFuck.Models.Shared
         public int CommentId { get; set; }
         public string Text { get; set; }
         public DateTime Date { get; set; }
+        public Guid Person { get; set; }
         public Guid PinnedToId { get; set; }
     }
 }

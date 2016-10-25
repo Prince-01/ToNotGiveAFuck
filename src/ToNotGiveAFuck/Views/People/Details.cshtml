@@ -1,0 +1,56 @@
+@model ToNotGiveAFuck.Models.Social.PersonViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Person</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Person.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Person.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <h2>Tasks you've created</h2>
+    @foreach (var todo in Model.TODOList.Where(t => t.Item1 == ToNotGiveAFuck.Models.TODOs.Enumerations.Priviliges.Creator)
+                                       .Select(tp => tp.Item2)
+                                       .OrderBy(t => 10 - t.Priority))
+    {
+        @Html.Partial("~/Views/TODOes/_TodoAsCard.cshtml", todo)
+        <div class="col-md-1 text-center">
+            <p class="glyphicon glyphicon-arrow-right" />
+        </div>
+    }
+</div>
+<br /><br />
+<div>
+    <h2>Task you participate</h2>
+    @foreach (var todo in Model.TODOList.Where(t => t.Item1 == ToNotGiveAFuck.Models.TODOs.Enumerations.Priviliges.Doer)
+                                       .Select(tp => tp.Item2)
+                                       .OrderBy(t => 10 - t.Priority))
+    {
+        @Html.Partial("~/Views/TODOes/_TodoAsCard.cshtml", todo)
+    }
+</div>
+<br /><br />
+<div>
+    <h2>Tasks you follow</h2>
+    @foreach (var todo in Model.TODOList.Where(t => t.Item1 == ToNotGiveAFuck.Models.TODOs.Enumerations.Priviliges.Follower)
+                                       .Select(tp => tp.Item2)
+                                       .OrderBy(t => 10 - t.Priority))
+    {
+        @Html.Partial("~/Views/TODOes/_TodoAsCard.cshtml", todo)
+    }
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Person.PersonId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

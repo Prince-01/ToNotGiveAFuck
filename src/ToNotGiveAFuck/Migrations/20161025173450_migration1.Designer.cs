@@ -8,9 +8,10 @@ using ToNotGiveAFuck.Models;
 namespace ToNotGiveAFuck.Migrations
 {
     [DbContext(typeof(ToNotGiveAFuckContext))]
-    partial class ToNotGiveAFuckContextModelSnapshot : ModelSnapshot
+    [Migration("20161025173450_migration1")]
+    partial class migration1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")

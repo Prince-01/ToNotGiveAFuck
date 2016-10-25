@@ -13,17 +13,18 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="TodoId" />
         <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="CanBeStartedBefore" />
+                    <label asp-for="CanBeStartedBefore"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
             <label asp-for="CategoryId" class="control-label col-md-2"></label>
             <div class="col-md-10">
                 <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="CategoryId" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="CreatedBy" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
@@ -73,6 +74,13 @@
             <div class="col-md-10">
                 <input asp-for="StatusChangeDate" class="form-control" />
                 <span asp-validation-for="StatusChangeDate" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Type" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="Type" class="form-control"></select>
+                <span asp-validation-for="Type" class="text-danger" />
             </div>
         </div>
         <div class="form-group">

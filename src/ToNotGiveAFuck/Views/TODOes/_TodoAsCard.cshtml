@@ -1,0 +1,28 @@
+@model ToNotGiveAFuck.Models.TODOs.TODO
+
+@{
+    var red = ((int)((Model.Priority - 1.0M) / 9.0M * 255.0M)).ToString("X");
+    red = red.Length == 1 ? "0" + red : red;
+    var green = ((int)((10.0M - Model.Priority) / 9.0M * 255.0M)).ToString("X");
+    green = green.Length == 1 ? "0" + green : green;
+    var blue = "00";
+
+    var color = "#" + red + green + blue;
+}
+
+<div id="todo-@Model.TodoId" class="col-md-3" style="background-color:@color;">
+    <p>
+        <div class="col-md-8"><b><a asp-controller="TODOes" asp-action="Details" asp-route-id="@Model.TodoId">@Model.Name</a></b></div>
+        <div class="col-md-4"><i>@Model.Priority / 10</i></div>
+    </p>
+    <p>
+        <div class="col-md-6">@Model.Status</div>
+    </p>
+    <p>
+        <div class="col-md-6"></div>
+        <div class="col-md-6">@Model.Type</div>
+    </p>
+    <p>
+        <div class="col-md-12"><a asp-controller="Categories" asp-action="Details" asp-route-id="@Model.CategoryId">@Model.Category.Name</a></div>
+    </p>
+</div>

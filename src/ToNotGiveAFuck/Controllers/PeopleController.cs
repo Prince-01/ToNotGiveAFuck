@@ -6,72 +6,78 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToNotGiveAFuck.Models;
+using ToNotGiveAFuck.Models.Social;
 using ToNotGiveAFuck.Models.TODOs;
-using ToNotGiveAFuck.Models.Shared;
-using System.Security.Claims;
+using static ToNotGiveAFuck.Models.TODOs.Enumerations;
 
 namespace ToNotGiveAFuck.Controllers
 {
-    public class TODOesController : Controller
+    public class PeopleController : Controller
     {
         private readonly ToNotGiveAFuckContext _context;
 
-        public TODOesController(ToNotGiveAFuckContext context)
+        public PeopleController(ToNotGiveAFuckContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
-        // GET: TODOes
+        // GET: People
         public async Task<IActionResult> Index()
         {
-            var toNotGiveAFuckContext = _context.TODO.Include(t => t.Category);
-            return View(await toNotGiveAFuckContext.ToListAsync());
+            return View(await _context.Person.ToListAsync());
         }
 
-        // GET: TODOes/Details/5
+        // GET: People/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var tODO = await _context.TODO.SingleOrDefaultAsync(m => m.TodoId == id);
-            if (tODO == null)
+            var person = await _context.Person.SingleOrDefaultAsync(m => m.PersonId == id);
+            if (User.Identity.IsAuthenticated && User.Claims.First().Value == id.ToString() && person == null)
+            {
+                _context.Add(person = new Person { PersonId = (Guid)id });
+                await _context.SaveChangesAsync();
+            }
+            if (person == null)
             {
                 return NotFound();
             }
+            var personVM = new PersonViewModel
+            {
+                Person = person,
+                TODOList = _context.PersonClaimsAbout.Where(u => u.UserId == id).Join(_context.TODO, p => p.PinnedToId, t => t.TodoId, (p, t) => new Tuple<Priviliges, TODO>(p.Privilege, t)).ToList()
+            };
+            personVM.TODOList.ForEach(t => t.Item2.Category = _context.Category.SingleOrDefault(c => c.CategoryId == t.Item2.CategoryId));
 
-            return View(tODO);
+            return View(personVM);
         }
 
-        // GET: TODOes/Create
+        // GET: People/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId");
             return View();
         }
 
-        // POST: TODOes/Create
+        // POST: People/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TodoId,CanBeStartedBefore,CategoryId,Deadline,Description,Name,Priority,StartDate,Status,StatusChangeDate,Type")] TODO tODO)
+        public async Task<IActionResult> Create([Bind("PersonId,Name")] Person person)
         {
             if (ModelState.IsValid)
             {
-                tODO.TodoId = Guid.NewGuid();
-                _context.Add(tODO);
-                _context.Add(new PersonClaimsAbout { UserId = Guid.Parse(User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value), PinnedToId = tODO.TodoId });
+                person.PersonId = Guid.NewGuid();
+                _context.Add(person);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId", tODO.CategoryId);
-            return View(tODO);
+            return View(person);
         }
 
-        // GET: TODOes/Edit/5
+        // GET: People/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -79,23 +85,22 @@ namespace ToNotGiveAFuck.Controllers
                 return NotFound();
             }
 
-            var tODO = await _context.TODO.SingleOrDefaultAsync(m => m.TodoId == id);
-            if (tODO == null)
+            var person = await _context.Person.SingleOrDefaultAsync(m => m.PersonId == id);
+            if (person == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId", tODO.CategoryId);
-            return View(tODO);
+            return View(person);
         }
 
-        // POST: TODOes/Edit/5
+        // POST: People/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("TodoId,CanBeStartedBefore,CategoryId,Deadline,Description,Name,Priority,StartDate,Status,StatusChangeDate,Type")] TODO tODO)
+        public async Task<IActionResult> Edit(Guid id, [Bind("PersonId,Name")] Person person)
         {
-            if (id != tODO.TodoId)
+            if (id != person.PersonId)
             {
                 return NotFound();
             }
@@ -104,12 +109,12 @@ namespace ToNotGiveAFuck.Controllers
             {
                 try
                 {
-                    _context.Update(tODO);
+                    _context.Update(person);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TODOExists(tODO.TodoId))
+                    if (!PersonExists(person.PersonId))
                     {
                         return NotFound();
                     }
@@ -120,11 +125,10 @@ namespace ToNotGiveAFuck.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId", tODO.CategoryId);
-            return View(tODO);
+            return View(person);
         }
 
-        // GET: TODOes/Delete/5
+        // GET: People/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -132,29 +136,29 @@ namespace ToNotGiveAFuck.Controllers
                 return NotFound();
             }
 
-            var tODO = await _context.TODO.SingleOrDefaultAsync(m => m.TodoId == id);
-            if (tODO == null)
+            var person = await _context.Person.SingleOrDefaultAsync(m => m.PersonId == id);
+            if (person == null)
             {
                 return NotFound();
             }
 
-            return View(tODO);
+            return View(person);
         }
 
-        // POST: TODOes/Delete/5
+        // POST: People/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var tODO = await _context.TODO.SingleOrDefaultAsync(m => m.TodoId == id);
-            _context.TODO.Remove(tODO);
+            var person = await _context.Person.SingleOrDefaultAsync(m => m.PersonId == id);
+            _context.Person.Remove(person);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        private bool TODOExists(Guid id)
+        private bool PersonExists(Guid id)
         {
-            return _context.TODO.Any(e => e.TodoId == id);
+            return _context.Person.Any(e => e.PersonId == id);
         }
     }
 }
