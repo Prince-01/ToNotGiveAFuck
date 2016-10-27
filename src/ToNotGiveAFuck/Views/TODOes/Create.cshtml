@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    var a = ViewBag.Statuses;
 }
 
 <h2>Create</h2>
@@ -22,7 +23,7 @@
         <div class="form-group">
             <label asp-for="CategoryId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
             </div>
         </div>
         <div class="form-group">
@@ -63,24 +64,18 @@
         <div class="form-group">
             <label asp-for="Status" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Status" class="form-control"/>
+                <select asp-for="Status" asp-items="ViewBag.Statuses" class="form-control"></select>
                 <span asp-validation-for="Status" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="StatusChangeDate" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="StatusChangeDate" class="form-control" />
-                <span asp-validation-for="StatusChangeDate" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
             <label asp-for="Type" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Type" class="form-control"/>
+                <input asp-for="Type" class="form-control" />
                 <span asp-validation-for="Type" class="text-danger" />
             </div>
         </div>
+        @Html.HiddenFor(m => m.StatusChangeDate)
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />

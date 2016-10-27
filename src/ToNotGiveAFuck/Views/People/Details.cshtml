@@ -19,10 +19,19 @@
     </dl>
 </div>
 <div>
+    @await Component.InvokeAsync("QuickAddTodo")
+    @await Component.InvokeAsync("Calendar", new
+{
+    todos = Model.TODOList.Where(t => t.Item1 == ToNotGiveAFuck.Models.TODOs.Enumerations.Priviliges.Creator)
+                                                                                               .Select(tp => tp.Item2)
+                                                                                               .OrderBy(t => 10 - t.Priority).ToList()
+})
+</div>
+<div>
     <h2>Tasks you've created</h2>
     @foreach (var todo in Model.TODOList.Where(t => t.Item1 == ToNotGiveAFuck.Models.TODOs.Enumerations.Priviliges.Creator)
-                                       .Select(tp => tp.Item2)
-                                       .OrderBy(t => 10 - t.Priority))
+                                                                                                                               .Select(tp => tp.Item2)
+                                                                                                                               .OrderBy(t => 10 - t.Priority))
     {
         @Html.Partial("~/Views/TODOes/_TodoAsCard.cshtml", todo)
         <div class="col-md-1 text-center">
@@ -34,8 +43,8 @@
 <div>
     <h2>Task you participate</h2>
     @foreach (var todo in Model.TODOList.Where(t => t.Item1 == ToNotGiveAFuck.Models.TODOs.Enumerations.Priviliges.Doer)
-                                       .Select(tp => tp.Item2)
-                                       .OrderBy(t => 10 - t.Priority))
+                                                                                                                               .Select(tp => tp.Item2)
+                                                                                                                               .OrderBy(t => 10 - t.Priority))
     {
         @Html.Partial("~/Views/TODOes/_TodoAsCard.cshtml", todo)
     }
@@ -44,8 +53,8 @@
 <div>
     <h2>Tasks you follow</h2>
     @foreach (var todo in Model.TODOList.Where(t => t.Item1 == ToNotGiveAFuck.Models.TODOs.Enumerations.Priviliges.Follower)
-                                       .Select(tp => tp.Item2)
-                                       .OrderBy(t => 10 - t.Priority))
+                                                                                                                               .Select(tp => tp.Item2)
+                                                                                                                               .OrderBy(t => 10 - t.Priority))
     {
         @Html.Partial("~/Views/TODOes/_TodoAsCard.cshtml", todo)
     }

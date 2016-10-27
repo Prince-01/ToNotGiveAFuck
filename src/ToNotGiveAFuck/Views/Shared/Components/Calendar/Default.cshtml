@@ -1,0 +1,50 @@
+@model List<ToNotGiveAFuck.Models.TODOs.TODO>
+
+@{
+    var firstDayOfMonth = DateTime.Now;
+    firstDayOfMonth = firstDayOfMonth.AddDays(-firstDayOfMonth.Day + 1);
+    var firstDayOnCalendar = firstDayOfMonth;
+    firstDayOnCalendar = firstDayOnCalendar.AddDays(-(firstDayOfMonth.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)firstDayOfMonth.DayOfWeek - 1));
+    var currentDayOnCalendar = firstDayOnCalendar;
+}
+<div class="col-md-4">
+    <pre class="pre-scrollable">
+<table width="1250pt">
+    @foreach (var item in Model)
+    {
+<tr><td width="100%">
+        @Html.Partial("~/Views/TODOes/_TodoAsCard.cshtml", item)
+            </td></tr>
+    }
+    </table>
+</pre>
+</div>
+<div class="col-md-8">
+    <table width="100%">
+        @for (int i = 0; i < 6; i++)
+        {
+            <tr>
+                @for (int j = 0; j < 7; j++)
+                {
+                    var deadlines = @Model.Where(t => t.Deadline?.Date == currentDayOnCalendar.Date);
+                    var starting = @Model.Where(t => t.StartDate?.Date == currentDayOnCalendar.Date);
+
+                    <td width="14.2%" height="100px">
+                        @currentDayOnCalendar.ToString("dd.MM.yyyy")
+                        <a style="font-size:x-small;" asp-controller="TODOes" asp-action="Create" asp-route-date="@currentDayOnCalendar.Date">+</a>
+                        <br />
+                        <p style="font-size:x-small; padding:0 0 0 0;"><a asp-controller="TODOes" asp-action="ShowStartingAt" asp-route-date="@currentDayOnCalendar.Date" asp-route-all="@false">@(starting.Count() - starting.Count(d => d.Status == ToNotGiveAFuck.Models.TODOs.Enumerations.Statuses.Finished))</a> / <a asp-controller="TODOes" asp-action="ShowStartingAt" asp-route-date="@currentDayOnCalendar.Date" asp-route-all="@true">@starting.Count()</a> zaczynaj?cych si?</p>
+                        <p style="font-size:x-small; padding:0 0 0 0;"><a asp-controller="TODOes" asp-action="ShowFinishingAt" asp-route-date="@currentDayOnCalendar.Date" asp-route-all="@false">@(deadlines.Count() - deadlines.Count(d => d.Status == ToNotGiveAFuck.Models.TODOs.Enumerations.Statuses.Finished))</a> / <a asp-controller="TODOes" asp-action="ShowFinishingAt" asp-route-date="@currentDayOnCalendar.Date" asp-route-all="@true">@deadlines.Count()</a> ko?cz?cych si?</p>
+                        @{ currentDayOnCalendar = currentDayOnCalendar.AddDays(1); }
+                    </td>
+                            }
+            </tr>
+                            }
+    </table>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -48,10 +48,20 @@ namespace ToNotGiveAFuck.Controllers
         }
 
         // GET: TODOes/Create
-        public IActionResult Create()
+        public IActionResult Create(DateTime? date)
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId");
-            return View();
+            ViewData["CategoryId"] = _context.Category.Select(c => new SelectListItem { Text = c.Name, Value = c.CategoryId.ToString() });
+            ViewData[nameof(Statuses)] = Enum.GetNames(typeof(Enumerations.Statuses)).Select(n => new SelectListItem { Text = n, Value = n });
+            ViewData[nameof(Types)] = Enum.GetNames(typeof(Enumerations.Types)).Select(n => new SelectListItem { Text = n, Value = n });
+
+            var todo = new TODO
+            {
+                Deadline = date,
+                StartDate = date,
+                StatusChangeDate = DateTime.Now
+            };
+
+            return View(todo);
         }
 
         // POST: TODOes/Create
@@ -75,6 +85,8 @@ namespace ToNotGiveAFuck.Controllers
             ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId", tODO.CategoryId);
             return View(tODO);
         }
+
+        
 
         // GET: TODOes/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
