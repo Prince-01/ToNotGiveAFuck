@@ -22,11 +22,15 @@ namespace ToNotGiveAFuck.Models
                 .HasKey(p => new { p.UserId, p.PinnedToId });
             modelBuilder.Entity<StatusChange>()
                 .HasKey(p => new { p.TodoId, p.ChangeDate });
+            modelBuilder.Entity<ChainsTodos>()
+                .HasKey(p => new { p.ChainID, p.TodoId });
         }
         public DbSet<Person> Person { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<TODO> TODO { get; set; }
         public DbSet<StatusChange> StatusChange { get; set; }
         public DbSet<PersonClaimsAbout> PersonClaimsAbout { get; set; }
+        public DbSet<Chain> Chain { get; set; }
+        public DbSet<ChainsTodos> ChainsTodos { get; set; }
     }
 }
