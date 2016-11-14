@@ -12,9 +12,10 @@
 }
 
 
-<div id="todo-@Model.TodoId" class="col-md-3" style="background-color:@color;">
-    <p>
-        <div class="col-md-8 dropdown">
+<div id="todo-@Model.TodoId" style="background-color:@color;">
+    <table>
+    <tr>
+        <td width="66%" class="dropdown">
             <b><a href="#" data-toggle="dropdown" class="dropdown-toggle">@Model.Name</a></b>
             <ul class="dropdown-menu" id="menu1">
                 <li>
@@ -34,20 +35,21 @@
                 <li class="divider"></li>
                 <li><a href="#">Separated link</a></li>
             </ul>
-        </div>
-        <div class="col-md-4"><i>@Model.Priority / 10</i></div>
+        </td>
+        <td><i>@Model.Priority / 10</i></td>
 
-    </p>
+    </tr>
 
 
-    <p>
-        <div class="col-md-6">@Model.Status</div>
-    </p>
-    <p>
-        <div class="col-md-6"></div>
-        <div class="col-md-6">@Model.Type</div>
-    </p>
-    <p>
-        <div class="col-md-12"><a asp-controller="Categories" asp-action="Details" asp-route-id="@Model.CategoryId">@Model.Category.Name</a></div>
-    </p>
+    <tr>
+        <td class="col-md-6">@Model.Status</td>
+    </tr>
+    <tr>
+        <td class="col-md-6"></td>
+        <td class="col-md-6">@Model.Type</td>
+    </tr>
+        <tr>
+            <td class="col-md-12"><a asp-controller="Categories" asp-action="Details" asp-route-id="@Model.CategoryId">@Model.Category.Name</a></td>
+        </tr>
+    </table>
 </div>
