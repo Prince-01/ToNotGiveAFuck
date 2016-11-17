@@ -23,5 +23,9 @@ namespace ToNotGiveAFuck.Models.TODOs
             Ordinary = 0,
             Chain = 1,
         }
+        public enum ConotationKinds
+        {
+            Friend
+        }
     }
 }

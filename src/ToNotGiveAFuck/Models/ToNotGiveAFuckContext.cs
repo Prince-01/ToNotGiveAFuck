@@ -24,6 +24,8 @@ namespace ToNotGiveAFuck.Models
                 .HasKey(p => new { p.TodoId, p.ChangeDate });
             modelBuilder.Entity<ChainsTodos>()
                 .HasKey(p => new { p.ChainID, p.TodoId });
+            modelBuilder.Entity<Conotation>()
+                .HasKey(p => new { p.Person1Id, p.Person2Id });
         }
         public DbSet<Person> Person { get; set; }
         public DbSet<Category> Category { get; set; }
@@ -32,5 +34,6 @@ namespace ToNotGiveAFuck.Models
         public DbSet<PersonClaimsAbout> PersonClaimsAbout { get; set; }
         public DbSet<Chain> Chain { get; set; }
         public DbSet<ChainsTodos> ChainsTodos { get; set; }
+        public DbSet<Conotation> Conotation { get; set; }
     }
 }

@@ -160,5 +160,13 @@ namespace ToNotGiveAFuck.Controllers
         {
             return _context.Person.Any(e => e.PersonId == id);
         }
+
+        public async Task<IActionResult> Friend(Guid id)
+        {
+            _context.Conotation.Add(new Conotation { Person1Id = Guid.Parse(User.Claims.First().Value), Person2Id = id, Kind = ConotationKinds.Friend });
+            await _context.SaveChangesAsync();
+
+            return await Index();
+        }
     }
 }
